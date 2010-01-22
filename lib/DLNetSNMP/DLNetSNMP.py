@@ -46,6 +46,7 @@ from sets import Set
 from select import select
 import threading
 
+import struct
 from ctypes import *
 from ctypes.util import find_library
 
@@ -872,14 +873,15 @@ class SNMPManager (Singleton):
 		if sys.platform == 'win32':
 			self._fdset2list = self._fdset2list_win32
 			self._snmp_read = self._snmp_read_win32
-			n = 1
+			self.bits_per = 1
 		else:
 			self._fdset2list = self._fdset2list_unix
 			self._snmp_read = self._snmp_read_unix
-			n = 32
+			self.bits_per = struct.calcsize(c_long._type_) * 8
+			print "bit_per", self.bits_per
 
 		self._max_fd = max_fd
-		self._fdset = c_long * (max_fd / n)
+		self._fdset = c_long * (max_fd / self.bits_per)
 		
 		self.setup_config ()
 
@@ -1060,10 +1062,10 @@ class SNMPManager (Singleton):
 		#for i in range (cnt):
 		for i in range (len (rd)):
 			if rd[i]:
-				for j in range (0, 32):
-					bit = 0x00000001 << (j % 32)
+				for j in range (0, self.bits_per):
+					bit = 0x00000001 << (j % self.bits_per)
 					if rd[i] & bit:
-						result.append (i * 32 + j)
+						result.append (i * self.bits_per + j)
 		return result
 	
 	def _snmp_read_win32 (self, d):
@@ -1076,7 +1078,7 @@ class SNMPManager (Singleton):
 	def _snmp_read_unix (self, d):
 		for fd in d:
 			rd = self._fdset ()
-			rd[fd / 32] |= 1 << (fd % 32)
+			rd[fd / self.bits_per] |= 1 << (fd % self.bits_per)
 			lib.snmp_read (byref (rd))
 	
 	# mibs ----------------------------------------------------------------
