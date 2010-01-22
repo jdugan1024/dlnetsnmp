@@ -1471,7 +1471,7 @@ class SNMPSession (object):
 
 	def callback (self, pdu):
 		reqid = pdu.contents.reqid
-		result = dict (get_result (pdu.contents))
+		result = get_result (pdu.contents)
 		
 		if reqid in self.async_requests:
 			rtype, timeout = self.async_requests.pop (reqid, (None, None))
@@ -1487,7 +1487,7 @@ class SNMPSession (object):
 				self.manager.emit ('response', self.name, reqid, result)
 				
 	def timeout (self, reqid):
-		if not self._process_waiting_async_request (reqid, 'timeout'):
+		if self._process_waiting_async_request (reqid, 'timeout'):
 			self.manager.emit ('timeout', self.name, reqid)
 
 	@syncronized
