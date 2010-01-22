@@ -878,7 +878,6 @@ class SNMPManager (Singleton):
 			self._fdset2list = self._fdset2list_unix
 			self._snmp_read = self._snmp_read_unix
 			self.bits_per = struct.calcsize(c_long._type_) * 8
-			print "bit_per", self.bits_per
 
 		self._max_fd = max_fd
 		self._fdset = c_long * (max_fd / self.bits_per)
