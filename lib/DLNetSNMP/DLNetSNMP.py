@@ -1106,10 +1106,17 @@ class SNMPManager (Singleton):
 		tp = lib.read_mib (name)
 		return bool (tp and tp.contents)
 	
+	def read_module (self, name):
+		tp = lib.netsnmp_read_module (name)
+		return tp == 0
+	
 	def refresh_mibs (self):
 		lib.shutdown_mib ()
 		lib.init_mib ()
 		
+	def init_mib (self):
+		lib.init_mib ()
+
 	# logging ----------------------------------------------------------------
 	
 	PRIORITY_MAP = {
