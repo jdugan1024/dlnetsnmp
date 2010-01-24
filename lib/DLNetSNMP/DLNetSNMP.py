@@ -983,8 +983,8 @@ class SNMPManager (Singleton):
 			for cb in (h['callback'] for h in handlers):
 				try:
 					cb (self, slot, session, reqid, *args, **kargs)
-				except:
-					pass
+				except Exception, e:
+					self.log (LOG_DEBUG, 'callback exception: %s' % str(e))
 				
 	def bind (self, slot, uid, session, callback):
 		self._signal_handlers.setdefault (slot, {}).setdefault (session, {})[uid] = {
@@ -1108,12 +1108,12 @@ class SNMPManager (Singleton):
 	
 	def read_module (self, name):
 		tp = lib.netsnmp_read_module (name)
-		return tp == 0
+		return tp != 0
 	
 	def refresh_mibs (self):
 		lib.shutdown_mib ()
 		lib.init_mib ()
-		
+
 	def init_mib (self):
 		lib.init_mib ()
 
