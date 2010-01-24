@@ -1235,9 +1235,10 @@ class SNMPManager (Singleton):
 class SNMPSession (object):
 	ASYNC_REQUEST_TIMEOUT = 60
 	
-	def __init__ (self, manager, name, **kargs):
+	def __init__ (self, manager, name, results_as_list=False, **kargs):
 		self.manager = manager
 		self.name = name
+                self.results_as_list = results_as_list
 		self.kw = kargs
 		self.mutex = threading.RLock ()
 		self.async_requests = {}
@@ -1471,7 +1472,10 @@ class SNMPSession (object):
 
 	def callback (self, pdu):
 		reqid = pdu.contents.reqid
-		result = get_result (pdu.contents)
+                if self.results_as_list:
+                    result = get_result (pdu.contents)
+                else:
+                    result = dict (get_result (pdu.contents))
 		
 		if reqid in self.async_requests:
 			rtype, timeout = self.async_requests.pop (reqid, (None, None))
