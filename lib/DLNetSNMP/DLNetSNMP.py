@@ -505,9 +505,8 @@ def str_to_oid (s):
 			r = map (int, filter (None, s.split ('.')))
 		else:
 			an_oid = (oid * MAX_OID_LEN)()
-			cbuff = create_string_buffer (s, len (s))
 			length = c_size_t (len (an_oid))
-			r = lib.get_node (cbuff, an_oid, byref (length))
+			r = lib.get_node (s, an_oid, byref (length))
 			if r:
 				r = an_oid[:length.value]
 			else:
@@ -985,6 +984,8 @@ class SNMPManager (Singleton):
 					cb (self, slot, session, reqid, *args, **kargs)
 				except Exception, e:
 					self.log (LOG_DEBUG, 'callback exception: %s' % str(e))
+					self.log (LOG_DEBUG,
+						traceback.format_exc(sys.exc_info()[2]))
 				
 	def bind (self, slot, uid, session, callback):
 		self._signal_handlers.setdefault (slot, {}).setdefault (session, {})[uid] = {
