@@ -27,6 +27,7 @@
 __all__ = [
 	'SNMPManager',
 	'SNMPSession',
+        'SnmpError',
 	'str_to_oid',
 	'strs_to_oids',
 	'oid_to_str',
