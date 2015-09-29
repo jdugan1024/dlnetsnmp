@@ -1,5 +1,9 @@
-DLNetSNMP: a Python ctypes-based Net-SNMP wrapper module.
-=========================================================
+# DLNetSNMP: a Python ctypes-based Net-SNMP wrapper module.
+
+NOTE: This was originally written by Alessandro Iob. I have tried to contact
+him but was unable to. This is my fork of the last code that was posted. This
+is primarily kept around to support a legacy system and I would not recommend
+it as a starting point for a new project.
 
 This is a small but almost complete wrapper for the NetSNMP library (http://net-snmp.sf.net/)
 I've developed for the Devil Framework (http://www.dlevel.com/products/devil).
@@ -12,8 +16,7 @@ Zenoss (http://www.zenoss.com/).
 
 I've developed and tested the library using Python 2.4.4, ctypes 1.0.1 and Net-SNMP 5.4.1. 
 
-Small list of features
-----------------------
+## Small list of features
 
     - Synchronous and asynchronous "get", "getbulk", "walk" and "set" operations.
     - MIBs management: set/get MIBs paths, load new MIBs, get OID descriptions
@@ -22,8 +25,7 @@ Small list of features
       and meaningful error reporting.
     - Multi-platform: runs under Linux (and I think other Unixes also), Windows and OS X.
 
-Bugs and not supported features
--------------------------------
+## Bugs and not supported features
 
     - Does not work if used from multiple-threads.
     - Traps collection implemented but not tested.
@@ -34,22 +36,19 @@ You can find some simple tests and usage patters at the end of the "DLNetSNMP.py
 If you find bugs or have suggestions or comments or usage notes or anything related 
 do not hesitate to contact me.
 
-Installation
-============
+# Installation
 
 >>> python setup.py install
 
 
-WIN32 NOTE
-----------
+## WIN32 NOTE
 
 If you want to use this module under Win32 outside of Devil Framework source tree,
 you have, at line ~84 of the DLNetSNMP.py file, change the DLL search path (if 
 you don't put the "netsnmp.dll" in this module's directory) or use the "find_library"
 function if the DLL is installed in a path searched by the system.
 
-SMALL USAGE GUIDE
-=================
+# SMALL USAGE GUIDE
 
 SNMP sessions are managed by the SNMPManager class. This class is a singleton,
 so there is always a single instance of it.
@@ -78,8 +77,7 @@ The SNMPManager accepts the following optional parameters:
 When the SNMPManager is not needed anymore, it should be destroyed using the 
 'destroy' method.
 
-MIB management methods
-----------------------
+## MIB management methods
 
 - set_mib_dir (PATH_TO_MIB_DIR): sets the directory where MIB files should be searched.
 
@@ -95,8 +93,7 @@ MIB management methods
 
 - refresh_mibs (): reloads all MIB definitions in use.
 
-Sessions management methods
----------------------------
+## Sessions management methods
 
 - add_session (name, version='1', **kargs): creates and opens a new SNMP session.
   The parameters are:
@@ -122,8 +119,7 @@ Sessions management methods
 - snmp_manager_instance[SESSION_NAME]: returns the Session instance with the 
   given name.
     
-Session events
---------------
+## Session events
 
 - bind (slot, uid, session, callback): binds a callback function to a session's
   event slot. The parameters are:
@@ -153,8 +149,7 @@ The available slots are:
 - 'timeout': emitted on request timeout. The assigned callback signature must be
   (slot, session_name, request_id).
     
-Session instances
------------------
+## Session instances
 
 - get_description (oid, width=80, buffer_size=10240): returns an OID's description
   from the MIB file. The parameters are:
@@ -212,8 +207,7 @@ Session instances
   - wait: used to make async calls sync, MUST not be used and left to FALSE.
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-Utilities
----------
+## Utilities
 
 - str_to_oid (s): converts a string to an oid tuple.
 
@@ -227,8 +221,7 @@ Utilities
 
 - oids_to_dots (): converts a list of oids to a list of "dotted" strings.
 
-CONTACT INFO
-============
+# CONTACT INFO
 
 Alessandro Iob
 email: alessandro.iob@dlevel.com
