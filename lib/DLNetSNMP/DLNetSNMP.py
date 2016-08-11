@@ -1003,6 +1003,7 @@ class SNMPManager (Singleton):
 
 	def process_sessions (self):
 		while not self._quit:
+			self.mutex.acquire()
 			rd, t = self._snmp_select_info (
 				self.SNMP_SELECT_SEC,
 				self.SNMP_SELECT_USEC,
@@ -1020,6 +1021,7 @@ class SNMPManager (Singleton):
 					lib.snmp_timeout ()
 
 			self.timeout_async_requests ()
+			self.mutex.release()
 			
 			if self.process_sessions_sleep:
 				time.sleep (self.process_sessions_sleep)
@@ -1256,7 +1258,9 @@ class SNMPSession (object):
 		self.async_request_timeout = self.ASYNC_REQUEST_TIMEOUT
 
 	def destroy (self):
+		self.manager.mutex.acquire()
 		self.close ()
+		self.manager.mutex.release()
 		self.manager = None
 		self.name = None
 		self.kw = None
