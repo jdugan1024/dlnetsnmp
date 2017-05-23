@@ -52,7 +52,7 @@ import struct
 from ctypes import *
 from ctypes.util import find_library
 
-from DLNetSNMP_CONSTANTS import *
+from constants import *
 
 #----------------------------------------------------------------------------
 
@@ -121,6 +121,7 @@ if sys.platform == 'win32':
 else:
     lib_path = find_library('netsnmp')
 
+print "lib_path=", lib_path
 lib = CDLL(lib_path)
 #lib = cdll.LoadLibrary (lib_path)
 lib.netsnmp_get_version.restype = c_char_p

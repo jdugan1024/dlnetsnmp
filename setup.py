@@ -1,28 +1,36 @@
-from setuptools import setup, find_packages
-import platform
+#!/usr/bin/env python
+"""
+Setup file for foosnmp distribution.
+"""
+import sys
+from setuptools import setup
 
-VERSION = '0.4.1'
+VERSION = '0.5.0'
 
-packages = find_packages('lib', exclude=['ez_setup', 'examples', 'tests'])
-package_dir = {'': 'lib'}
-package_data = {}
-if platform.system().lower().startswith('win'):
-    package_data['DLNetSNMP'] = ['windows-i386/*.dll']
+try:
+    # Use pandoc to convert .md -> .rst when uploading to pypi
+    import pypandoc
+    DESCRIPTION = pypandoc.convert('README.md', 'rst')
+except (IOError, ImportError, OSError):
+    DESCRIPTION = open('README.md').read()
+
+if sys.version_info[0] == 2 and sys.version_info[1] < 7:
+    sys.exit('Sorry, Python 2 < 2.7 is not supported')
+
+if sys.version_info[0] == 3:
+    sys.exit('Sorry, Python 3 < 3.3 is not supported')
 
 setup(
-    name='DLNetSNMP',
+    name='foosnmp',
     version=VERSION,
     description="A small but complete NetSNMP ctypes wrapper.",
-    long_description="""\
-DLNetSNMP is a Python ctypes wrapper for the NetSNMP library written. 
-It provides:
- - Synchronous and asynchronous "get", "getbulk", "walk" and "set" operations.
- - MIBs management: set/get MIBs paths, load new MIBs, get OID descriptions
-   from MIBs, oid to name (and vice versa) translation tools.
- - Session management, internal asynchronous events management, pluggable logger
-   and meaningful error reporting.
- - Multi-platform: runs under Linux (and I think other Unixes also), Windows and OS X.
-""",
+    long_description=DESCRIPTION,
+    keywords='snmp networking',
+    author='Jon M. Dugan',
+    author_email='jdugan@x1024.net',
+    url='http://github.com/jdugan1024/dlnetsnmp/',
+    license='GPL',
+    packages=["foosnmp"],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
@@ -32,14 +40,5 @@ It provides:
         'Topic :: Internet',
         'Operating System :: POSIX',
         'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows :: Windows NT/2000',
     ],
-    keywords='snmp dlevel dlnetsnmp',
-    author='Alessandro Iob',
-    author_email='alessandro.iob@dlevel.com',
-    url='http://www.dlevel.com/products/opensource/dlnetsnmp',
-    license='GPL',
-    package_dir=package_dir,
-    package_data=package_data,
-    packages=packages,
-    zip_safe=False, )
+)

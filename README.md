@@ -1,60 +1,44 @@
-# DLNetSNMP: a Python ctypes-based Net-SNMP wrapper module.
+# foosnmp: a Python ctypes-based Net-SNMP wrapper module.
 
 NOTE: This was originally written by Alessandro Iob. I have tried to contact
-him but was unable to. This is my fork of the last code that was posted. This
-is primarily kept around to support a legacy system and I would not recommend
-it as a starting point for a new project.
+him but was unable to. This is my fork of the last code that was posted on the 
+dlevel.com website. This is minimally maintained to support a legacy system and 
+I would not recommend it as a starting point for a new project.
 
-This is a small but almost complete wrapper for the NetSNMP library (http://net-snmp.sf.net/)
-I've developed for the Devil Framework (http://www.dlevel.com/products/devil).
+This is a small but almost complete wrapper for the [NetSNMP](http://net-snmp.sf.net/).
+This library was originally based on the "pynetsnmp" module developed by cool people at 
+[Zenoss](http://www.zenoss.com/).
 
-You can find the latest version of this library at:
-http://www.dlevel.com/products/opensource/dlnetsnmp
-
-The library is based on the "pynetsnmp" module developed by cool people at 
-Zenoss (http://www.zenoss.com/).
-
-I've developed and tested the library using Python 2.4.4, ctypes 1.0.1 and Net-SNMP 5.4.1. 
+The current version has been tested with Python 2.7 and NetSNMP 5.7.3.
 
 ## Small list of features
 
-    - Synchronous and asynchronous "get", "getbulk", "walk" and "set" operations.
-    - MIBs management: set/get MIBs paths, load new MIBs, get OID descriptions
-      from MIBs, oid to name (and vice versa) translation tools.
-    - Session management, internal asynchronous events management, pluggable logger
-      and meaningful error reporting.
-    - Multi-platform: runs under Linux (and I think other Unixes also), Windows and OS X.
+- Synchronous and asynchronous "get", "getbulk", "walk" and "set" operations.
+- MIBs management: set/get MIBs paths, load new MIBs, get OID descriptions
+  from MIBs, oid to name (and vice versa) translation tools.
+- Session management, internal asynchronous events management, pluggable logger
+  and meaningful error reporting.
+- Multi-platform: runs under Linux (and I think other Unixes also), Windows and OS X.
 
-## Bugs and not supported features
+## Bugs and unsupported features
 
-    - Does not work if used from multiple-threads.
-    - Traps collection implemented but not tested.
-    - Tables not implemented.
+- Does not work if used from multiple-threads.
+- Traps collection implemented but not tested.
+- Tables not implemented.
 
-You can find some simple tests and usage patters at the end of the "DLNetSNMP.py" file.
-
-If you find bugs or have suggestions or comments or usage notes or anything related 
-do not hesitate to contact me.
+You can find some simple tests and usage patters at the end of the "foosnmp.py" file.
 
 # Installation
 
->>> python setup.py install
-
-
-## WIN32 NOTE
-
-If you want to use this module under Win32 outside of Devil Framework source tree,
-you have, at line ~84 of the DLNetSNMP.py file, change the DLL search path (if 
-you don't put the "netsnmp.dll" in this module's directory) or use the "find_library"
-function if the DLL is installed in a path searched by the system.
-
+    pip install foosnmp
+    
 # SMALL USAGE GUIDE
 
 SNMP sessions are managed by the SNMPManager class. This class is a singleton,
 so there is always a single instance of it.
 
->>> import DLNetSNMP
->>> sm = DLNetSNMP.SNMPManager ()
+    import foosnmp
+    sm = foosnmp.SNMPManager ()
 
 The SNMPManager accepts the following optional parameters:
 
@@ -221,8 +205,3 @@ The available slots are:
 
 - oids_to_dots (): converts a list of oids to a list of "dotted" strings.
 
-# CONTACT INFO
-
-Alessandro Iob
-email: alessandro.iob@dlevel.com
-blog: http://www.dlevel.com/blogs/alex
