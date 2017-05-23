@@ -32,6 +32,7 @@ __all__ = [
     'create_string_buffer',
     'lib',
     'get_enum_dict',
+    'setup_library',
 ]
 
 # pylint: disable=unused-wildcard-import,invalid-name
@@ -859,6 +860,35 @@ def get_enum_dict(info):
 
     return result
 
+def setup_library(snmp_dir=None):
+    local_dir = snmp_dir or os.path.abspath(os.path.dirname(__file__))
+    mibs_path = os.path.join(local_dir, 'mibs')
+    persistent_path = os.path.join(local_dir, 'persist')
+    config_path = os.path.join(local_dir, 'etc')
+
+    idx = os.path.join(mibs_path, '.index')
+    if os.path.exists(idx):
+        try:
+            os.remove(idx)
+        except:
+            pass
+
+    funcs = {
+        'int': lib.netsnmp_ds_set_int,
+        'bool': lib.netsnmp_ds_set_boolean,
+        'str': lib.netsnmp_ds_set_string,
+    }
+    config = {
+        NETSNMP_DS_LIB_MIBDIRS: ('str', mibs_path),
+        NETSNMP_DS_LIB_PERSISTENT_DIR: ('str', persistent_path),
+        NETSNMP_DS_LIB_CONFIGURATION_DIR: ('str', persistent_path),
+        NETSNMP_DS_LIB_DONT_PERSIST_STATE: ('bool', 1),
+        NETSNMP_DS_LIB_DEFAULT_PORT: ('int', 161),
+    }
+    for k, v in config.iteritems():
+        t, d = v
+        funcs[t](NETSNMP_DS_LIBRARY_ID, k, d)
+
 #----------------------------------------------------------------------------
 # exceptions
 
@@ -982,34 +1012,7 @@ class SNMPManager(Singleton):
     # config ----------------------------------------------------------------
 
     def setup_config(self):
-        local_dir = self.local_dir or os.path.abspath(
-            os.path.dirname(__file__))
-        mibs_path = os.path.join(local_dir, 'mibs')
-        persistent_path = os.path.join(local_dir, 'persist')
-        config_path = os.path.join(local_dir, 'etc')
-
-        idx = os.path.join(mibs_path, '.index')
-        if os.path.exists(idx):
-            try:
-                os.remove(idx)
-            except:
-                pass
-
-        funcs = {
-            'int': lib.netsnmp_ds_set_int,
-            'bool': lib.netsnmp_ds_set_boolean,
-            'str': lib.netsnmp_ds_set_string,
-        }
-        config = {
-            NETSNMP_DS_LIB_MIBDIRS: ('str', mibs_path),
-            NETSNMP_DS_LIB_PERSISTENT_DIR: ('str', persistent_path),
-            NETSNMP_DS_LIB_CONFIGURATION_DIR: ('str', persistent_path),
-            NETSNMP_DS_LIB_DONT_PERSIST_STATE: ('bool', 1),
-            NETSNMP_DS_LIB_DEFAULT_PORT: ('int', 161),
-        }
-        for k, v in config.iteritems():
-            t, d = v
-            funcs[t](NETSNMP_DS_LIBRARY_ID, k, d)
+        setup_library(snmp_dir=self.local_dir)
 
     # signals ----------------------------------------------------------------
 
