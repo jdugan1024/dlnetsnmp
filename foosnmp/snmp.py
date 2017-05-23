@@ -16,14 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-#----------------------------------------------------------------------------
-# HOWTO TO MAKE THE MODULE WORK OUTSIDE OF DEVIL FRAMEWORK
-
-# If you whant to use this module outside of Devil Framework source tree, you must:
-# - at line ~84, and only for Win32, change the DLL search path (if you don't put the "netsnmp.dll"
-#   in this module's directory) or use the "find_library" function if the DLL
-#   is installed in a path searched by the system.
-
 __all__ = [
     'SNMPManager',
     'SNMPSession',
@@ -36,14 +28,18 @@ __all__ = [
     'oids_to_dots',
     'get_oid_info',
     'get_snmp_error',
+    'mkoid',
+    'create_string_buffer',
+    'lib',
+    'get_enum_dict',
 ]
 
+# pylint: disable=unused-wildcard-import,invalid-name
 #----------------------------------------------------------------------------
 
 import os
 import sys
 import time
-from sets import Set
 from select import select
 import threading
 import traceback
@@ -52,14 +48,11 @@ import struct
 from ctypes import *
 from ctypes.util import find_library
 
-from constants import *
+from .constants import *
 
 #----------------------------------------------------------------------------
 
-try:
-    from DLevel.Utilities.Singleton import Singleton
-except:
-    from Singleton import Singleton
+from .Singleton import Singleton
 
 #----------------------------------------------------------------------------
 
@@ -99,31 +92,9 @@ try:
 except Exception:
     pass
 
-if sys.platform == 'win32':
-    # change path to dll here (now searches 'netsnmp.dll' in this module path)
-    #lib_path = find_library ('netsnmp')
-    lib_path = os.path.join(
-        os.path.dirname(__file__), 'windows-i386', 'netsnmp.dll')
+lib_path = find_library('netsnmp')
 
-    # must init winsock
-    class WSAData(Structure):
-        _fields_ = (
-            ('wVersion', c_ushort),
-            ('wHighVersion', c_ushort),
-            ('szDescription', c_char * (256 + 1)),
-            ('szSystemStatus', c_char * (128 + 1)),
-            ('iMaxSockets', c_ushort),
-            ('iMaxUdpDg', c_ushort),
-            ('lpVendorInfo', c_char_p), )
-
-    wsa_data = WSAData()
-    windll.ws2_32.WSAStartup(0x202, byref(wsa_data))
-else:
-    lib_path = find_library('netsnmp')
-
-print "lib_path=", lib_path
 lib = CDLL(lib_path)
-#lib = cdll.LoadLibrary (lib_path)
 lib.netsnmp_get_version.restype = c_char_p
 
 #----------------------------------------------------------------------------
@@ -306,6 +277,11 @@ class netsnmp_tree(Structure):
 class netsnmp_enum_list(Structure):
     pass
 
+netsnmp_enum_list._fields_ = [
+    ('next', POINTER (netsnmp_enum_list)),
+    ('value', c_int),
+    ('label', c_char_p)
+]
 
 class netsnmp_range_list(Structure):
     pass
@@ -862,14 +838,26 @@ def decode_type(var):
 def get_result(pdu):
     result = []
     var = pdu.variables
+
     while var:
         var = var.contents
         #print '======', decode_type (var)
         oid, val = decode_type(var)
         result.append((tuple(oid), val))
         var = var.next_variable
+
     return result
 
+def get_enum_dict(info):
+    result = {}
+    enums = info["enums"]
+
+    while enums:
+        enum = enums.contents
+        result[enum.value] = enum.label
+        enums = enum.next
+
+    return result
 
 #----------------------------------------------------------------------------
 # exceptions
@@ -928,14 +916,9 @@ class SNMPManager(Singleton):
 
         self._quit = False
 
-        if sys.platform == 'win32':
-            self._fdset2list = self._fdset2list_win32
-            self._snmp_read = self._snmp_read_win32
-            self.bits_per = 1
-        else:
-            self._fdset2list = self._fdset2list_unix
-            self._snmp_read = self._snmp_read_unix
-            self.bits_per = struct.calcsize(c_long._type_) * 8
+        self._fdset2list = self._fdset2list_unix
+        self._snmp_read = self._snmp_read_unix
+        self.bits_per = struct.calcsize(c_long._type_) * 8
 
         self._max_fd = max_fd
         self._fdset = c_long * (max_fd / self.bits_per)
@@ -1108,9 +1091,6 @@ class SNMPManager(Singleton):
             t = 0
         return rd, t
 
-    def _fdset2list_win32(self, rd, n, cnt):
-        return rd[1:cnt + 1]
-
     def _fdset2list_unix(self, rd, n, cnt):
         result = []
         #for i in range (cnt):
@@ -1121,13 +1101,6 @@ class SNMPManager(Singleton):
                     if rd[i] & bit:
                         result.append(i * self.bits_per + j)
         return result
-
-    def _snmp_read_win32(self, d):
-        for i, fd in enumerate(d):
-            rd = self._fdset()
-            rd[0] = len(d)
-            rd[i + 1] = fd
-            lib.snmp_read(byref(rd))
 
     def _snmp_read_unix(self, d):
         for fd in d:
