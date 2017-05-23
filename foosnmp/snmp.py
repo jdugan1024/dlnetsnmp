@@ -33,6 +33,8 @@ __all__ = [
     'lib',
     'get_enum_dict',
     'setup_library',
+    'add_mib_dir',
+    'read_module',
 ]
 
 # pylint: disable=unused-wildcard-import,invalid-name
@@ -889,6 +891,41 @@ def setup_library(snmp_dir=None):
         t, d = v
         funcs[t](NETSNMP_DS_LIBRARY_ID, k, d)
 
+def set_mib_dir(path):
+    lib.netsnmp_set_mib_directory(path)
+
+def add_mib_dir(path, append=True):
+    if append:
+        path = '+' + path
+    else:
+        path = '-' + path
+
+    set_mib_dir(path)
+
+def remove_mib_dir(path):
+    curr_paths = get_mib_dir().split(os.path.pathsep)
+    if path in curr_paths:
+        curr_paths.remove(path)
+    set_mib_dir(os.path.pathsep.join(curr_paths))
+
+def get_mib_dir():
+    return lib.netsnmp_get_mib_directory()
+
+def read_mib(name):
+    tp = lib.read_mib(name)
+    return bool(tp and tp.contents)
+
+def read_module(name):
+    tp = lib.netsnmp_read_module(name)
+    return tp != 0
+
+def refresh_mibs():
+    lib.shutdown_mib()
+    lib.init_mib()
+
+def init_mib():
+    lib.init_mib()
+
 #----------------------------------------------------------------------------
 # exceptions
 
@@ -1117,36 +1154,25 @@ class SNMPManager(Singleton):
         lib.netsnmp_set_mib_directory(path)
 
     def add_mib_dir(self, path, append=True):
-        if append:
-            path = '+' + path
-        else:
-            path = '-' + path
-
-        self.set_mib_dir(path)
+        add_mib_dir(path, append)
 
     def remove_mib_dir(self, path):
-        curr_paths = self.get_mib_dir().split(os.path.pathsep)
-        if path in curr_paths:
-            curr_paths.remove(path)
-        self.set_mib_dir(os.path.pathsep.join(curr_paths))
+        remove_mib_dir(path)
 
     def get_mib_dir(self):
-        return lib.netsnmp_get_mib_directory()
+        return get_mib_dir()
 
     def read_mib(self, name):
-        tp = lib.read_mib(name)
-        return bool(tp and tp.contents)
+        return read_mib(name)
 
     def read_module(self, name):
-        tp = lib.netsnmp_read_module(name)
-        return tp != 0
+        return read_module(name)
 
     def refresh_mibs(self):
-        lib.shutdown_mib()
-        lib.init_mib()
+        return refresh_mibs()
 
     def init_mib(self):
-        lib.init_mib()
+        return init_mib()
 
     # logging ----------------------------------------------------------------
 
