@@ -11,10 +11,10 @@ This library was originally based on the "pynetsnmp" module developed by cool pe
 
 The current version has been tested with Python 2.7 and NetSNMP 5.7.3.
 
-## Small list of features
+## Features
 
 - Synchronous and asynchronous "get", "getbulk", "walk" and "set" operations.
-- MIBs management: set/get MIBs paths, load new MIBs, get OID descriptions
+- MIB management: set/get MIB paths, load new MIBs, get OID descriptions
   from MIBs, oid to name (and vice versa) translation tools.
 - Session management, internal asynchronous events management, pluggable logger
   and meaningful error reporting.
@@ -32,13 +32,13 @@ You can find some simple tests and usage patters at the end of the "foosnmp.py" 
 
     pip install foosnmp
     
-# SMALL USAGE GUIDE
+# Usage Guide
 
 SNMP sessions are managed by the SNMPManager class. This class is a singleton,
 so there is always a single instance of it.
 
     import foosnmp
-    sm = foosnmp.SNMPManager ()
+    sm = foosnmp.SNMPManager()
 
 The SNMPManager accepts the following optional parameters:
 
@@ -63,23 +63,23 @@ When the SNMPManager is not needed anymore, it should be destroyed using the
 
 ## MIB management methods
 
-- set_mib_dir (PATH_TO_MIB_DIR): sets the directory where MIB files should be searched.
+- set_mib_dir(PATH_TO_MIB_DIR): sets the directory where MIB files should be searched.
 
-- add_mib_dir (PATH_TO_MIB_DIR): adds a directory to the ones already defined, 
+- add_mib_dir(PATH_TO_MIB_DIR): adds a directory to the ones already defined, 
   where MIB files should be searched.
     
-- add_mib_dir (PATH_TO_MIB_DIR): removes a directory from the ones searched for 
+- add_mib_dir(PATH_TO_MIB_DIR): removes a directory from the ones searched for 
   MIB files.
     
-- get_mib_dir (): returns the current directories searched for MIB files.
+- get_mib_dir(): returns the current directories searched for MIB files.
 
-- read_mib (PATH_TO_MIB_FILE): reads into memory a MIB file.
+- read_mib(PATH_TO_MIB_FILE): reads into memory a MIB file.
 
-- refresh_mibs (): reloads all MIB definitions in use.
+- refresh_mibs(): reloads all MIB definitions in use.
 
 ## Sessions management methods
 
-- add_session (name, version='1', **kargs): creates and opens a new SNMP session.
+- add_session(name, version='1', **kargs): creates and opens a new SNMP session.
   The parameters are:
   - name: session unique name.
   - version: SNMP protocol version ('1', '2', '3', default is '1')
@@ -92,12 +92,12 @@ When the SNMPManager is not needed anymore, it should be destroyed using the
     
   Returns a Session object or raises an exception.
     
-- add_trapd_session (name, peername, fileno=-1): creates an SNMP trap daemon session.
+- add_trapd_session(name, peername, fileno=-1): creates an SNMP trap daemon session.
   TRAP MANAGEMENT IS NOT TESTED.
     
-- remove_session (name): closes and removes the given section.
+- remove_session(name): closes and removes the given section.
 
-- find_session (sessid): returns the Session instance associated with the given
+- find_session(sessid): returns the Session instance associated with the given
   session ID.
     
 - snmp_manager_instance[SESSION_NAME]: returns the Session instance with the 
@@ -105,7 +105,7 @@ When the SNMPManager is not needed anymore, it should be destroyed using the
     
 ## Session events
 
-- bind (slot, uid, session, callback): binds a callback function to a session's
+- bind(slot, uid, session, callback): binds a callback function to a session's
   event slot. The parameters are:
   - slot: slot name (see below).
   - uid: unique identifier used to reference the binding.
@@ -113,7 +113,7 @@ When the SNMPManager is not needed anymore, it should be destroyed using the
   - callback: callback function to be called on event. The callback signature
     must be (slot, session_name, request_id, result).
         
-- unbind (slot, uid, session=None): removes the binded callback. 
+- unbind(slot, uid, session=None): removes the binded callback. 
   The parameters are:
   - slot: slot name.
   - uid: binding unique ID, as specified in the 'bind' call.
@@ -135,7 +135,7 @@ The available slots are:
     
 ## Session instances
 
-- get_description (oid, width=80, buffer_size=10240): returns an OID's description
+- get_description(oid, width=80, buffer_size=10240): returns an OID's description
   from the MIB file. The parameters are:
   - oid: oid name or oid tuple.
   - width: formatting width of the returned description. The default value (80)
@@ -143,35 +143,35 @@ The available slots are:
   - buffer_size: size of the buffer where the description is stored. The default
     value (80) should be almost always right.
         
-- sync_get (oids, exc_on_error=False): performs a synchronous 'get' request for
+- sync_get(oids, exc_on_error=False): performs a synchronous 'get' request for
   given oids. The parameters are:
   - oids: list of oid names or tuples.
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-- sync_getbulk (nonrepeaters, maxrepetitions, oids, exc_on_error=False): performs
+- sync_getbulk(nonrepeaters, maxrepetitions, oids, exc_on_error=False): performs
   a synchronous 'getbulk' for given oids. The parameters are:
   - nonrepeaters: number of non repeaters.
   - maxrepetitions: maximum repetitions.
   - oids: list of oid names or tuples.
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-- sync_walk (root, exc_on_error=False): performs a synchronous 'getnext' request
+- sync_walk(root, exc_on_error=False): performs a synchronous 'getnext' request
   for the given oid. The parameters are:
   - oids: oid name or tuple.
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-- sync_set (oids_values, exc_on_error=False): performs a synchronous 'set' request
+- sync_set(oids_values, exc_on_error=False): performs a synchronous 'set' request
   for the given oids. The parameters are:
   - oids: list of (oid name or tuple, value to set) tuples (or lists).
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-- async_get (oids, wait=False, exc_on_error=False): performs an asynchronous 'get'
+- async_get(oids, wait=False, exc_on_error=False): performs an asynchronous 'get'
   request for given oids. The parameters are:
   - oids: list of oid names or tuples.
   - wait: used to make async calls sync, MUST not be used and left to FALSE.
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-- async_getbulk (nonrepeaters, maxrepetitions, oids, wait=False, exc_on_error=False):
+- async_getbulk(nonrepeaters, maxrepetitions, oids, wait=False, exc_on_error=False):
   performs an asynchronous 'getbulk' for given oids. The parameters are:
   - nonrepeaters: number of non repeaters.
   - maxrepetitions: maximum repetitions.
@@ -179,13 +179,13 @@ The available slots are:
   - wait: used to make async calls sync, MUST not be used and left to FALSE.
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-- async_walk (root, wait=False, exc_on_error=False): performs an asynchronous 
+- async_walk(root, wait=False, exc_on_error=False): performs an asynchronous 
   'getnext' request for the given oid. The parameters are:
   - oids: oid name or tuple.
   - wait: used to make async calls sync, MUST not be used and left to FALSE.
   - exc_on_error: True to rise an exception if request fails (default is False).
     
-- async_set (oids_values, wait=False, exc_on_error=False): performs an asynchronous
+- async_set(oids_values, wait=False, exc_on_error=False): performs an asynchronous
   'set' request for the given oids. The parameters are:
   - oids: list of (oid name or tuple, value to set) tuples (or lists).
   - wait: used to make async calls sync, MUST not be used and left to FALSE.
@@ -193,15 +193,15 @@ The available slots are:
     
 ## Utilities
 
-- str_to_oid (s): converts a string to an oid tuple.
+- str_to_oid(s): converts a string to an oid tuple.
 
-- strs_to_oids (l): converts a list of strings to a list of oid tuples.
+- strs_to_oids(l): converts a list of strings to a list of oid tuples.
 
-- oid_to_str (oid): converts an oid tuple to string.
+- oid_to_str(oid): converts an oid tuple to string.
 
-- oids_to_strs (l): converts a list of oid tuples to a list of strings.
+- oids_to_strs(l): converts a list of oid tuples to a list of strings.
 
-- oid_to_dot (oid): converts an oid to a "dotted" string.
+- oid_to_dot(oid): converts an oid to a "dotted" string.
 
-- oids_to_dots (): converts a list of oids to a list of "dotted" strings.
+- oids_to_dots(): converts a list of oids to a list of "dotted" strings.
 
