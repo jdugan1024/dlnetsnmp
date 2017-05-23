@@ -1,12 +1,10 @@
 # foosnmp: a Python ctypes-based Net-SNMP wrapper module.
 
-<aside class="warning">
-NOTE: This was originally called DLNetSNMP and was written by Alessandro Iob.  I
+:warning: NOTE: This was originally called DLNetSNMP and was written by Alessandro Iob.  I
 have tried to contact him but was unable to. This is my fork of the last code
 that was posted on the  dlevel.com website. This is minimally maintained to
 support a legacy system and  I would not recommend it as a starting point for a
 new project.
-</aside>
 
 This is a small but almost complete wrapper for the [NetSNMP](http://net-snmp.sf.net/).
 This library was originally based on the "pynetsnmp" module developed by cool people at 
