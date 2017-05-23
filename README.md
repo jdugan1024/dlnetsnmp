@@ -6,7 +6,7 @@ have tried to contact him but was unable to. This is my fork of the last code
 that was posted on the  dlevel.com website. This is minimally maintained to
 support a legacy system and  I would not recommend it as a starting point for a
 new project.
-</aside
+</aside>
 
 This is a small but almost complete wrapper for the [NetSNMP](http://net-snmp.sf.net/).
 This library was originally based on the "pynetsnmp" module developed by cool people at 
