@@ -35,6 +35,7 @@ __all__ = [
     'setup_library',
     'add_mib_dir',
     'read_module',
+    'init_mib',
 ]
 
 # pylint: disable=unused-wildcard-import,invalid-name
