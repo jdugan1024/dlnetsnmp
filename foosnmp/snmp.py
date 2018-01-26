@@ -133,12 +133,10 @@ float_version = float('.'.join(version.split('.')[:2]))
 localname = []
 param_name = []
 
-if float_version < 5.099:
-    raise ImportError("netsnmp version 5.1 or greater is required")
-if float_version > 5.199:
-    localname = [('localname', c_char_p)]
-    if float_version > 5.299:
-        param_name = [('paramName', c_char_p)]
+if float_version < 5.7:
+    raise ImportError("netsnmp version 5.7 or greater is required")
+
+class netsnmp_container_s(Structure): pass
 
 netsnmp_session._fields_ = [
     ('version', c_long),
@@ -149,7 +147,7 @@ netsnmp_session._fields_ = [
     ('next', POINTER(netsnmp_session)),
     ('peername', c_char_p),
     ('remote_port', u_short),
-] + localname + [
+    ('localname', c_char_p),
     ('local_port', u_short),
     ('authenticator', authenticator),
     ('callback', netsnmp_callback),
@@ -184,10 +182,11 @@ netsnmp_session._fields_ = [
     ('securityPrivKeyLen', c_size_t),
     ('securityPrivLocalKey', c_char_p),
     ('securityPrivLocalKeyLen', c_size_t),
-] + param_name + [
     ('securityModel', c_int),
     ('securityLevel', c_int),
+    ('paramName', c_char_p),
     ('securityInfo', c_void_p),
+    ('transport_configuration', POINTER(netsnmp_container_s)),
     ('myvoid', c_void_p),
 ]
 
