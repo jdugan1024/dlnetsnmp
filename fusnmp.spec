@@ -1,5 +1,5 @@
 Name: fusnmp
-Version: 1.0.2
+Version: 1.0.3
 Release: 1%{?dist}
 Summary: A small but complete NetSNMP ctypes wrapper.
 Source0: %{name}-%{version}.tar.gz
