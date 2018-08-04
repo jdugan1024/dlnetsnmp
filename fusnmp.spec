@@ -221,7 +221,7 @@ The available slots are:
 
 
 %prep
-%setup -n %{name}-%{unmangled_version} -n %{name}-%{unmangled_version}
+%setup -q
 
 %build
 python setup.py build
