@@ -1,21 +1,13 @@
-%define name fusnmp
-%define version 0.5.0
-%define unmangled_version 0.5.0
-%define unmangled_version 0.5.0
-%define release 1
-
-Summary: A small but complete NetSNMP ctypes wrapper.
-Name: %{name}
+Name: fusnmp
 Version: 1.0.1
-Release: %{release}
-Source0: %{name}-%{unmangled_version}.tar.gz
+Release: 1%{?dist}
+Summary: A small but complete NetSNMP ctypes wrapper.
+Source0: %{name}-%{version}.tar.gz
 License: GPL
 Group: Development/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Prefix: %{_prefix}
 BuildArch: noarch
-Vendor: Jon M. Dugan <jdugan@x1024.net>
 Url: http://github.com/jdugan1024/fusnmp/
+Requires: net-snmp net-snmp-agent-libs net-snmp-devel net-snmp-libs net-snmp-utils
 
 %description
 # fusnmp: a Python ctypes-based Net-SNMP wrapper module.
