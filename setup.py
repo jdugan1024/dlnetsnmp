@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Setup file for foosnmp distribution.
+Setup file for fusnmp distribution.
 """
 import sys
 from setuptools import setup
@@ -21,16 +21,16 @@ if sys.version_info[0] == 3:
     sys.exit('Sorry, Python 3 < 3.3 is not supported')
 
 setup(
-    name='foosnmp',
+    name='fusnmp',
     version=VERSION,
     description="A small but complete NetSNMP ctypes wrapper.",
     long_description=DESCRIPTION,
     keywords='snmp networking',
     author='Jon M. Dugan',
     author_email='jdugan@x1024.net',
-    url='http://github.com/jdugan1024/dlnetsnmp/',
+    url='http://github.com/jdugan1024/fusnmp/',
     license='GPL',
-    packages=["foosnmp"],
+    packages=["fusnmp"],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
@@ -39,6 +39,5 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Topic :: Internet',
         'Operating System :: POSIX',
-        'Operating System :: MacOS :: MacOS X',
     ],
 )

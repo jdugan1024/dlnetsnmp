@@ -1,9 +1,9 @@
-# foosnmp: a Python ctypes-based Net-SNMP wrapper module.
+# fusnmp: a Python ctypes-based Net-SNMP wrapper module.
 
 :warning: NOTE: This was originally called DLNetSNMP and was written by Alessandro Iob.  I
 have tried to contact him but was unable to. This is my fork of the last code
 that was posted on the  dlevel.com website. This is minimally maintained to
-support a legacy system and  I would not recommend it as a starting point for a
+support a legacy system and I would not recommend it as a starting point for a
 new project.
 
 This is a small but almost complete wrapper for the [NetSNMP](http://net-snmp.sf.net/).
@@ -27,19 +27,19 @@ The current version has been tested with Python 2.7 and NetSNMP 5.7.3.
 - Traps collection implemented but not tested.
 - Tables not implemented.
 
-You can find some simple tests and usage patters at the end of the "foosnmp.py" file.
+You can find some simple tests and usage patters at the end of the "fusnmp.py" file.
 
 # Installation
 
-    pip install foosnmp
+    pip install fusnmp
     
 # Usage Guide
 
 SNMP sessions are managed by the SNMPManager class. This class is a singleton,
 so there is always a single instance of it.
 
-    import foosnmp
-    sm = foosnmp.SNMPManager()
+    import fusnmp
+    sm = fusnmp.SNMPManager()
 
 The SNMPManager accepts the following optional parameters:
 
