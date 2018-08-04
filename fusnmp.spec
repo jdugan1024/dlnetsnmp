@@ -6,7 +6,7 @@
 
 Summary: A small but complete NetSNMP ctypes wrapper.
 Name: %{name}
-Version: 1.0.0
+Version: 1.0.1
 Release: %{release}
 Source0: %{name}-%{unmangled_version}.tar.gz
 License: GPL

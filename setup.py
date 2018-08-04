@@ -5,7 +5,7 @@ Setup file for fusnmp distribution.
 import sys
 from setuptools import setup
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 
 try:
     # Use pandoc to convert .md -> .rst when uploading to pypi
